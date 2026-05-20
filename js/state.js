@@ -160,10 +160,21 @@ export function matchesActiveFilters(issue) {
 
   // Assignee match
   if (state.filters.assignee) {
-    const hasAssignee = issue.assignee?.login === state.filters.assignee || 
-                        issue.assignees?.some(a => a.login === state.filters.assignee);
-    if (!hasAssignee) {
-      return false;
+    const hasAnyAssignee = !!issue.assignee || (issue.assignees && issue.assignees.length > 0);
+    if (state.filters.assignee === 'unassigned') {
+      if (hasAnyAssignee) {
+        return false;
+      }
+    } else if (state.filters.assignee === 'assigned') {
+      if (!hasAnyAssignee) {
+        return false;
+      }
+    } else {
+      const hasSpecificAssignee = issue.assignee?.login === state.filters.assignee || 
+                                  issue.assignees?.some(a => a.login === state.filters.assignee);
+      if (!hasSpecificAssignee) {
+        return false;
+      }
     }
   }
 

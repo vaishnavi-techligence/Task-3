@@ -326,6 +326,21 @@ export function populateFilterDropdowns() {
 
   // Populate Assignees dropdown
   assigneeSelect.innerHTML = '<option value="">All Assignees</option>';
+  
+  // Add dedicated "Assigned" option
+  const assignedOpt = document.createElement('option');
+  assignedOpt.value = 'assigned';
+  assignedOpt.textContent = 'Assigned';
+  assignedOpt.selected = currentAssigneeVal === 'assigned';
+  assigneeSelect.appendChild(assignedOpt);
+  
+  // Add dedicated "Unassigned" option
+  const unassignedOpt = document.createElement('option');
+  unassignedOpt.value = 'unassigned';
+  unassignedOpt.textContent = 'Unassigned';
+  unassignedOpt.selected = currentAssigneeVal === 'unassigned';
+  assigneeSelect.appendChild(unassignedOpt);
+
   options.assignees.forEach(assignee => {
     const opt = document.createElement('option');
     opt.value = assignee.login;
