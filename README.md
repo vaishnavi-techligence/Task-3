@@ -61,6 +61,13 @@ The GitHub REST API permits only **60 unauthenticated requests per hour** per IP
 
 ---
 
+## Screenshots Of Implementation
+<img width="1456" height="891" alt="image" src="https://github.com/user-attachments/assets/81a5333a-e756-49ac-93cc-b8617393099a" />
+<img width="1375" height="912" alt="image" src="https://github.com/user-attachments/assets/c054392f-e21b-4e37-ac28-51f6f0b1e9f8" />
+<img width="1371" height="725" alt="image" src="https://github.com/user-attachments/assets/ee1ec999-788f-4bad-aaac-2af1f1b5bde7" />
+<img width="1289" height="790" alt="image" src="https://github.com/user-attachments/assets/9a3862ea-3249-4edd-8188-48ceb0271393" />
+
+
 ## Architectural Deep Dive
 
 ### 1. State Management Approach (`state.js`)
