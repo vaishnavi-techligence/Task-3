@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitFlow Kanban — GitHub Issues Dashboard</title>
+  
+  <!-- Meta tags for premium SEO alignment -->
+  <meta name="description" content="A high-performance production-grade GitHub Issues Kanban Board SPA using native drag-and-drop, event delegation, and Vanilla JavaScript.">
+  <meta name="keywords" content="GitHub, Kanban, Issues Tracker, Vanilla JS, Drag and Drop, SPA">
+  <meta name="author" content="Antigravity">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- 1. Semantic Application Header -->
+    <header class="app-header">
+      <div class="brand">
+        <!-- Modernized Glowing GitHub icon -->
+        <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        <h1>GitFlow Kanban</h1>
+        <span>SPA v1.0</span>
+      </div>
+      
+      <!-- Authentication & Repository Search Form -->
+      <div class="search-controls">
+        <!-- Optional GitHub Token Input to bypass API Rate Limits (Premium production-grade addition) -->
+        <div class="input-group">
+          <span class="input-icon" title="Optional: Enter a GitHub Personal Access Token to avoid API rate limits">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="16" height="16">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <input 
+            type="password" 
+            id="pat-token-input" 
+            class="search-input token-input" 
+            placeholder="GitHub PAT (Optional)"
+            title="Saves in localStorage. Never sent to third parties."
+          />
+        </div>
+
+        <form id="search-form" class="input-group">
+          <span class="input-icon">
+            <svg stroke="currentColor" fill="none" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input 
+            type="text" 
+            id="repo-search-input" 
+            class="search-input" 
+            placeholder="owner/repo (e.g. facebook/react)" 
+            required 
+            pattern="^[a-zA-Z0-9\-_\.]+\/[a-zA-Z0-9\-_\.]+$"
+            title="Please enter in the format: owner/repo"
+          />
+          <button type="submit" class="btn" style="margin-left: 0.5rem">Track</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- 2. Dynamic Repository Metadata Card -->
+    <section id="repo-meta-container" class="repo-meta-card animate-fade-in" style="display: none;">
+      <div class="repo-meta-header">
+        <div class="repo-meta-title">
+          <a href="#" id="repo-title" target="_blank" class="repo-name-link">
+            owner/repo
+            <!-- Arrow-up-right symbol -->
+            <svg stroke="currentColor" fill="none" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <p id="repo-desc" class="repo-description">Repository description loading...</p>
+        </div>
+        
+        <div class="repo-stats-list">
+          <div class="repo-stat-item" title="Stars count">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="16" height="16">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span>Stars: <span id="stars-count" class="repo-stat-value">0</span></span>
+          </div>
+          <div class="repo-stat-item" title="Forks count">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="16" height="16">
+              <line x1="6" y1="3" x2="6" y2="15"></line>
+              <circle cx="18" cy="6" r="3"></circle>
+              <circle cx="6" cy="18" r="3"></circle>
+              <path d="M18 9a9 9 0 0 1-9 9"></path>
+            </svg>
+            <span>Forks: <span id="forks-count" class="repo-stat-value">0</span></span>
+          </div>
+          <div class="repo-stat-item" title="Open Issues count">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="16" height="16">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="1"></circle>
+            </svg>
+            <span>Open Issues: <span id="open-issues-count" class="repo-stat-value">0</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Dynamic Real-Time Filters Toolbar -->
+    <section class="toolbar">
+      <div class="filters-group">
+        <!-- Search Keyword Input -->
+        <div class="input-group" style="flex-grow: 1; max-width: 350px;">
+          <span class="input-icon">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="14" height="14">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input 
+            type="text" 
+            id="filter-keyword" 
+            class="search-input" 
+            placeholder="Filter by keyword (e.g. title, body, #number)..." 
+            style="width: 100%; padding: 0.65rem 1rem 0.65rem 2.2rem"
+          />
+        </div>
+
+        <!-- Filter by Label Dynamic Dropdown -->
+        <select id="filter-label" class="select-filter">
+          <option value="">All Labels</option>
+        </select>
+
+        <!-- Filter by Assignee Dynamic Dropdown -->
+        <select id="filter-assignee" class="select-filter">
+          <option value="">All Assignees</option>
+        </select>
+
+        <!-- Clear Active Filters -->
+        <button id="clear-filters" class="filter-clear-btn">
+          <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" width="14" height="14">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          Clear Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. Interactive 3-Column Kanban Board -->
+    <main id="kanban-board" class="kanban-board">
+      
+      <!-- Open Column -->
+      <section class="kanban-column" data-column="open">
+        <header class="column-header">
+          <div class="column-title-container">
+            <div class="column-indicator"></div>
+            <h2 class="column-title">Open</h2>
+            <span class="column-badge">0</span>
+          </div>
+        </header>
+        <div class="issue-list" id="list-open">
+          <!-- Dynamic cards or empty messages -->
+        </div>
+      </section>
+
+      <!-- In Review Column -->
+      <section class="kanban-column" data-column="review">
+        <header class="column-header">
+          <div class="column-title-container">
+            <div class="column-indicator"></div>
+            <h2 class="column-title">In Review</h2>
+            <span class="column-badge">0</span>
+          </div>
+        </header>
+        <div class="issue-list" id="list-review">
+          <!-- Dynamic cards or empty messages -->
+        </div>
+      </section>
+
+      <!-- Closed Column -->
+      <section class="kanban-column" data-column="closed">
+        <header class="column-header">
+          <div class="column-title-container">
+            <div class="column-indicator"></div>
+            <h2 class="column-title">Closed</h2>
+            <span class="column-badge">0</span>
+          </div>
+        </header>
+        <div class="issue-list" id="list-closed">
+          <!-- Dynamic cards or empty messages -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 5. Infinite Pagination Controller -->
+    <section id="load-more-container" class="board-footer" style="display: none;">
+      <button id="load-more-btn" class="btn btn-secondary">
+        Load More Issues
+      </button>
+    </section>
+
+    <!-- 6. Sliding Inline Detail Panel Overlay -->
+    <div id="detail-backdrop" class="detail-panel-backdrop"></div>
+    <aside id="detail-panel" class="detail-panel" aria-label="Issue details panel">
+      
+      <!-- Panel Header -->
+      <div class="detail-header">
+        <div class="detail-header-info">
+          <span id="detail-state" class="detail-state-badge">Open</span>
+          <h2 id="detail-title" class="detail-title">Issue title placeholder</h2>
+          <div id="detail-meta" class="detail-meta">#0 opened by @username</div>
+        </div>
+        <button id="detail-close" class="close-panel-btn" title="Close Panel (Esc)">
+          <svg stroke="currentColor" fill="none" stroke-width="2.5" viewBox="0 0 24 24" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Panel Content Body scroll container -->
+      <div class="detail-body-container">
+        
+        <!-- Labels Section -->
+        <div>
+          <h3 class="detail-section-title">Labels</h3>
+          <div id="detail-labels" class="detail-labels-container">
+            <!-- Dynamic badges -->
+          </div>
+        </div>
+        
+        <!-- Assignee Section -->
+        <div>
+          <h3 class="detail-section-title">Assignee</h3>
+          <div id="detail-assignee">
+            <!-- Dynamic assignee badge -->
+          </div>
+        </div>
+
+        <!-- Issue Body Text Section -->
+        <div>
+          <h3 class="detail-section-title">Description</h3>
+          <article id="detail-body" class="detail-body-md">
+            <!-- Dynamic formatted text -->
+          </article>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- Bootstrapping the SPA from modular entrypoint -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
