@@ -4,7 +4,7 @@ A production-style, fully DOM-driven single-page application (SPA) designed to t
 
 ---
 
-## 📂 Folder Structure
+## Folder Structure
 
 ```text
 Task-3/
@@ -22,7 +22,7 @@ Task-3/
 
 ---
 
-## 🚀 Setup & Execution Instructions
+## Setup & Execution Instructions
 
 Since this application is built with modern **ES Modules (`type="module"`)**, browsers restrict loading these modules from direct file system paths (`file://...`) due to CORS security policies. It must be run through a local HTTP web server.
 
@@ -52,7 +52,7 @@ Open your browser and navigate to: `http://localhost:8000`.
 
 ---
 
-## 🛡️ GitHub API Rate Limits & Token Support
+## GitHub API Rate Limits & Token Support
 The GitHub REST API permits only **60 unauthenticated requests per hour** per IP address. If you search multiple repositories or fetch many pages, you might encounter a `403 Rate Limit Exceeded` error.
 
 **Premium Addition:** We built an optional **GitHub Personal Access Token (PAT)** field directly into the app header.
@@ -61,7 +61,7 @@ The GitHub REST API permits only **60 unauthenticated requests per hour** per IP
 
 ---
 
-## 🏗️ Architectural Deep Dive
+## Architectural Deep Dive
 
 ### 1. State Management Approach (`state.js`)
 Rather than distributing state across individual DOM elements (which leads to "spaghetti code"), the application implements a **centralized, single source of truth** pattern.
